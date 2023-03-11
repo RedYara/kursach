@@ -1,0 +1,228 @@
+﻿@model WebApplication3.Models.EditAppRequest
+
+@{
+    ViewData["Title"] = "Редактирование приложения";
+}
+
+
+
+<div class="card">
+    <div class="card-header">
+        <h1>Редактирование приложения @Model.Name</h1>
+    </div>
+    @Html.HiddenFor(x => x.GroupId, new {@id = "GroupIds"})
+    @Html.HiddenFor(x => x.GroupTypeId, new {@id = "GroupTypeIds"})
+    <form asp-action="Edit" enctype="multipart/form-data" method="post">
+        <div class="card-body">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Name" class="control-label"> Название </label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Version" class="control-label"> Версия </label>
+                    <input asp-for="Version" class="form-control" />
+                    <span asp-validation-for="Version" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Description" class="control-label"> Описание </label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="CreatedDate" class="control-label"> Дата создания </label>
+                    <input asp-for="CreatedDate" type="date" class="form-control" />
+                    <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Apk" class="control-label"> Файл приложения </label>
+                    <input asp-for="Apk" type="file" accept=".apk" class="form-control" data-val="false" />
+                    <span asp-validation-for="Apk" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="GroupId" class="control-label">Группа приложений</label>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Добавить группу
+                        </button>
+                        <select class="form-control valid" asp-for="GroupId" id="Groups" onchange="appendGroupTypeList()">
+                        </select>
+                        <span asp-validation-for="GroupId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class=" control-label" asp-for="GroupTypeId">Тип приложений</label>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                            Добавить тип группы
+                        </button>
+                        <select class="form-control valid" asp-for="GroupTypeId" id="GroupTypes">
+                        </select>
+                        <span asp-validation-for="GroupTypeId" class="text-danger field-validation-valid"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="form-group col-md-6">
+                    <label asp-for="Screenshots" class="control-label"> Скриншоты </label>
+                    <input asp-for="Screenshots" type="file" accept="image/png, image/gif, image/jpeg" multiple class="form-control" id="scrinsUploader" data-val="false" />
+                    <span asp-validation-for="Screenshots" class="text-danger"></span>
+                </div>
+                <div class="col-md-6" id="imgViewer">
+                    @foreach (var item in Model.ScreenshotsList)
+                    {
+                        <img src="data:image/jpeg;base64, @item.Base64" style="width: 300px; height: 200px;" class="img-fluid col-auto">
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Logo" class="control-label"> Логотип </label>
+                    <input asp-for="Logo" type="file" accept="image/png, image/gif, image/jpeg" class="form-control" id="logoInput" data-val="false" />
+                    <span asp-validation-for="Logo" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <img class="mt-2 mb-2 img-fluid col-auto" id="logo" src="data:image/jpeg;base64, @Model.LogoUrl" style="width: 300px; height: 200px;">
+                </div>
+            </div>
+            <div class="form-group btn-group">
+                <a class="btn btn-sm btn-outline-dark" asp-action="Index">К списку приложений</a>
+                <input type="submit" value="Сохранить" class="btn btn-sm btn-outline-primary" />
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить группу</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
+                    <div class="row">
+                        <label class="control-label">Название группы</label>
+                        <input id="groupName" class="form-control" type="text" />
+                    </div>
+                    <div class="row"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="createGroup()">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Добавить тип группы</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
+                    <div class="row">
+                        <label class="control-label">Группа</label>
+                        <select class="form-control" id="groupTypeId">
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label class="control-label">Название типа</label>
+                        <input id="groupTypeName" class="form-control" type="text" data-val="false" />
+                    </div>
+                    <div class="row"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="createGroupType()">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script type="text/javascript">
+    var groupId = $('#GroupIds').val();
+    var groupTypeId = $('#GroupTypeIds').val();
+    $(document).ready(function () {
+        appendGroupList();
+    });
+    function appendGroupList() {
+        $.ajax({
+            url: '/apps/GetGroups',
+            type: "Get",
+            success: function (data) {
+                $("#Groups").empty();
+                $("#groupTypeId").empty();
+                $.each(data, function (i, item) {
+                    if (groupId == item.id) {
+                        $('#Groups').append($('<option>', {
+                            value: item.id,
+                            text: item.name,
+                            selected: ""
+                        }));
+                    }
+                    else {
+                        $('#Groups').append($('<option>', {
+                            value: item.id,
+                            text: item.name
+                        }));
+                    };
+                })
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+            },
+            complete: function () {
+                appendGroupTypeList();
+            }
+        },
+        )
+    };
+    function appendGroupTypeList() {
+        var value = $("#Groups").val();
+        $.ajax({
+            url: '/apps/getgrouptypes?id=' + value,
+            type: "Get",
+            success: function (data) {
+                $("#GroupTypes").empty();
+                $.each(data, function (i, item) {
+                    if (groupTypeId == item.id) {
+                        $('#GroupTypes').append($('<option>', {
+                            value: item.id,
+                            text: item.name,
+                            selected: ""
+                        }));
+                    }
+                    else {
+                        $('#GroupTypes').append($('<option>', {
+                            value: item.id,
+                            text: item.name
+                        }));
+                    };
+                })
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+            },
+            complete: function () {
+            }
+        });
+    };
+</script>

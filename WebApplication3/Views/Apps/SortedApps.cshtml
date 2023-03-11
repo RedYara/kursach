@@ -1,0 +1,33 @@
+﻿@using System.Security.Claims;
+@model IEnumerable<WebApplication3.Persistence.Models.App>
+
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+    @foreach (var item in Model)
+    {
+        @Html.HiddenFor(x => item.Id)
+        <div class="col">
+            <div class="card shadow-sm">
+                <img class="bd-placeholder-img card-img-top" height="250" width="200" role="img" src="data:image/png;base64, @item.Logo" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                <div class="card-header"><strong>@Html.DisplayFor(modelItem => item.Name)</strong></div>
+                <div class="card-body">
+                    <p class="card-text">@item.Description</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a asp-action="Details" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
+                            @if (((ClaimsIdentity)User.Identity).Claims
+                           .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value == "Admin")
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-primary">Редактировать</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
+                            }
+                            <a download href="@item.DownloadLink" class="btn btn-sm btn-outline-success">Скачать</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

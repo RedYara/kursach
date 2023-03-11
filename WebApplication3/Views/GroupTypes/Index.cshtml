@@ -1,0 +1,76 @@
+﻿@model Tuple<IEnumerable<WebApplication3.Persistence.Models.GroupType>,IEnumerable<WebApplication3.Persistence.Models.Group>>
+
+@{
+    ViewData["Title"] = "Типы приложений";
+}
+
+<h1>Типы приложений</h1>
+
+<p>
+    <a class="btn btn-sm btn-outline-success" asp-action="Create">Добавить новый тип</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                #
+            </th>
+            <th scope="col">
+                Название группы
+            </th>
+            <th scope="col">
+                Название типа
+            </th>
+            <th scope="col">
+                Действие
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Item1)
+        {
+            <tr>
+                <th scope="row">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.Item2.FirstOrDefault(x => x.Id == item.Group.Id).Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="@("#exampleModal")@item.Id">
+                            Удалить
+                        </button>
+                    </div>
+
+                    <form asp-action="Delete" enctype="multipart/form-data" method="post">
+                        <div class="modal fade" id="@("exampleModal")@item.Id" tabindex="-1" aria-labelledby="@("#exampleModal")@item.Id" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body" style="border:none">
+                                        <h5 id="exampleModalLabel2">Вы действительно хотите удалить группу?</h5>
+                                    </div>
+                                    <div class="modal-footer" style="border:none;">
+                                        <div class="btn-group">
+
+                                            @*<input type="hidden" asp-for="@item.Id" />*@
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                            @*<input type="submit" value="Удалить" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" />*@
+                                            <button asp-action="Delete" asp-route-id="@item.Id" type="submit" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Удалить</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,36 @@
+﻿@model WebApplication3.Persistence.Models.GroupType
+
+@{
+    ViewData["Title"] = "Редактирование типа группы";
+}
+
+<h1>Редактирование типа группы</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Название типа</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupId" class="control-label">Название группы</label>
+                @*@Html.DropDownListFor(Model.GroupId, ViewBag.GroupId, "Выберите группу приложений", new {@class = "form-control"})*@
+                <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId"></select>
+                <span asp-validation-for="GroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group btn-group mt-2">
+                <a class="btn btn-sm btn-outline-dark" asp-action="Index">К списку типов</a>
+                <input type="submit" value="Сохранить" class="btn btn-sm btn-outline-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

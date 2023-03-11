@@ -1,0 +1,111 @@
+﻿@using System.Security.Claims;
+@model Tuple<IEnumerable<WebApplication3.Persistence.Models.App>,IEnumerable<WebApplication3.Persistence.Models.Group>>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@if (User.Identity.IsAuthenticated && ((ClaimsIdentity)User.Identity).Claims
+                       .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value == "Admin")
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            Панель администратора
+        </div>
+        <div class="card-body">
+            <a asp-controller="Apps" asp-action="Create" class="btn btn-success">Добавить приложение</a>
+            <a asp-controller="Groups" asp-action="Create" class="btn btn-success">Добавить группу</a>
+            <a asp-controller="GroupTypes" asp-action="Create" class="btn btn-success">Добавить тип группы</a>
+        </div>
+    </div>
+}
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Магазин приложений APKshka</h1>
+                <p class="lead text-muted">Обеспечение более безопасной, лучшей и быстрой загрузки программного обеспечения для наших поклонников по всему миру. Мы предлагаем одну из самых полных коллекций приложений, игр и истории версий. Все работы по загрузке гарантируют 100% отсутствие дополнительного расширения. Мы считаем, что все вы, ребята, заслуживаете лучшего способа наслаждаться мобильной жизнью. Наша команда всегда готова помочь всем пользователям решить их проблемы с установкой, обновлением приложений для смартфонов и многим другим.</p>
+
+                <p>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary my-2">Вход</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-secondary my-2">Регистрация</a>
+                </p>
+
+            </div>
+        </div>
+    </section>
+}
+@if (User.Identity.IsAuthenticated)
+{
+
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Магазин приложений APKshka</h1>
+            </div>
+        </div>
+    </section>
+    <div class="album pb-5 bg-light">
+        <div class="btn-group w-100">
+            <input type="button" class="btn-check" value="0" id="btncheck 0" onclick="sortApps(0)" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck 0">Все</label>
+            @foreach (var item in Model.Item2)
+            {
+                <input type="button" class="btn-check" value="@item.Id" id="btncheck @item.Id" onclick="sortApps(@item.Id)" autocomplete="off">
+                <label class="btn btn-outline-primary" for="btncheck @item.Id">@item.Name</label>
+
+            }
+        </div>
+        <div class="container py-5" id="appList">
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                @foreach (var item in Model.Item1)
+                {
+                    @Html.HiddenFor(x => item.Id)
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img class="bd-placeholder-img card-img-top" height="250" width="200" role="img" src="data:image/png;base64, @item.Logo" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                            <div class="card-header"><strong>@Html.DisplayFor(modelItem => item.Name)</strong></div>
+                            <div class="card-body">
+                                <p class="card-text">@item.Description</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a asp-action="Details" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Просмотреть</a>
+                                        @if (((ClaimsIdentity)User.Identity).Claims
+                                       .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value == "Admin")
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-primary">Редактировать</a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
+                                        }
+                                        <a download href="@item.DownloadLink" class="btn btn-sm btn-outline-success">Скачать</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function sortApps(value) {
+        $.ajax({
+            url: '/apps/SortedApps?groupId=' + value,
+            type: "Get",
+            success: function (data) {
+                $('#appList').html(data);
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+            },
+            complete: function () {
+            }
+        });
+    };
+</script>

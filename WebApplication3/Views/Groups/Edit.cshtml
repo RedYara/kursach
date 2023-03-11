@@ -1,0 +1,30 @@
+﻿@model WebApplication3.Persistence.Models.Group
+
+@{
+    ViewData["Title"] = "Редактирование группы";
+}
+
+<h1>Редактирование группы</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditGroup" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Название группы</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group btn-group mt-2">
+                <a class="btn btn-sm btn-outline-dark" asp-action="Index">К списку групп</a>
+                <input type="submit" value="Сохранить" class="btn btn-sm btn-outline-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

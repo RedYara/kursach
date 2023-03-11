@@ -1,0 +1,86 @@
+﻿@model WebApplication3.Persistence.Models.GroupType
+
+@{
+    ViewData["Title"] = "Добавление типа группы";
+}
+
+<h1>Добавление типа группы</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateGroupType" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Название типа приложений</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupId" class="control-label">Название группы приложений</label>
+                <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId"></select>
+            </div>
+            <div class="form-group btn-group mt-2">
+
+                <a class="btn btn-sm btn-outline-dark" asp-controller="Apps" asp-action="Index">К списку приложений</a>
+                <a class="btn btn-sm btn-outline-dark" asp-action="Index">К списку типов</a>
+                <input type="submit" value="Создать" class="btn btn-sm btn-outline-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script type="text/javascript">
+    function appendGroupList() {
+        $.ajax({
+            url: '/apps/GetGroups',
+            type: "Get",
+            success: function (data) {
+                $("#Groups").empty();
+                $("#groupTypeId").empty();
+                $.each(data, function (i, item) {
+                    $('#Groups').append($('<option>', {
+                        value: item.id,
+                        text: item.name
+                    }));
+                });
+                $.each(data, function (i, item) {
+                    $('#groupTypeId').append($('<option>', {
+                        value: item.id,
+                        text: item.name
+                    }));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+            },
+            complete: function () {
+                appendGroupTypeList();
+            }
+        });
+    };
+    function appendGroupTypeList() {
+        var value = $("#Groups").val();
+        $.ajax({
+            url: '/apps/getgrouptypes?id=' + value,
+            type: "Get",
+            success: function (data) {
+                $("#GroupTypes").empty();
+                $.each(data, function (i, item) {
+                    $('#GroupTypes').append($('<option>', {
+                        value: item.id,
+                        text: item.name
+                    }));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+            },
+            complete: function () {
+            }
+        });
+    };
+</script>
