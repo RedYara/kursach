@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using WebApplication3.Intrerfaces;
 using WebApplication3.Models;
 using WebApplication3.Persistence.EntityTypeConfigurations;

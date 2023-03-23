@@ -24,7 +24,7 @@ namespace WebApplication3.Controllers
         {
             var app = await _context.Apps.ToListAsync();
             var groups = await _context.Group.ToListAsync();
-            var tuple = new Tuple<IEnumerable<App>, IEnumerable<Group>>(app,groups);
+            var tuple = new Tuple<IEnumerable<App>, IEnumerable<Group>>(app, groups);
             return View(tuple);
         }
 
@@ -41,7 +41,7 @@ namespace WebApplication3.Controllers
             {
                 apps = await _context.Apps.ToListAsync();
             }
-           
+
             return PartialView(apps);
         }
 
@@ -328,8 +328,8 @@ namespace WebApplication3.Controllers
         {
             List<Group> groups = _context.Group.ToList();
             return groups;
-        } 
-        
+        }
+
         [HttpGet]
         public async Task<List<GroupType>> GetGroupTypes(int id)
         {

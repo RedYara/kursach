@@ -1,4 +1,3 @@
-using IdentityServer4.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,7 +13,7 @@ namespace WebApplication3.Models
         [Required(ErrorMessage = "Укажите почту")]
         [RegularExpression(@"^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$", ErrorMessage = "Почта указана неверно")]
         [Remote(action: "CheckEmail", controller: "Account", ErrorMessage = "Почта уже используется")]
-        public string Email{ get; set; }
+        public string Email { get; set; }
 
         [UIHint("password")]
         [Required(ErrorMessage = "Укажите пароль")]

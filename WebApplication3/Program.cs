@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore;
-using WebApplication3;
-using WebApplication3.Intrerfaces;
-
 namespace WebApplication3
 {
 

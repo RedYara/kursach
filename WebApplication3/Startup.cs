@@ -1,11 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.IISIntegration;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using WebApplication3.Data.Initializers;
 using WebApplication3.Models;
 
@@ -17,7 +11,7 @@ namespace WebApplication3
         {
             app.UseAuthentication();
             app.UseRouting();
-            app.UseCors("AllowAll"); 
+            app.UseCors("AllowAll");
             app.UseStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = true
@@ -58,7 +52,7 @@ namespace WebApplication3
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<_dbContext>()
                 .AddDefaultTokenProviders();
-                
+
             services.AddScoped<UserManager<User>>();
             services.AddDbContext<_dbContext>(options =>
             options.UseNpgsql("Host=localhost;Port=5432;Database=kursach;Username=postgres;Password=admin; IncludeErrorDetail=true; CommandTimeout = 100"));

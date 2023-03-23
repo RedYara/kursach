@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebApplication3.Persistence.Models;
-using WebApplication3.Data;
-using WebApplication3.Intrerfaces;
-using WebApplication3.Models;
+﻿using WebApplication3.Models;
 
 namespace WebApplication3.Data.Initializers
 {

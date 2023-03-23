@@ -4,7 +4,7 @@ using WebApplication3.Persistence.Models;
 
 namespace WebApplication3.Persistence.EntityTypeConfigurations
 {
-    public class AppConfiguration :IEntityTypeConfiguration<App>
+    public class AppConfiguration : IEntityTypeConfiguration<App>
     {
         public void Configure(EntityTypeBuilder<App> builder)
         {
